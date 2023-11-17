@@ -3,15 +3,26 @@ package dev.jayox;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.io.File;
 
-public final class PlayerLocations extends JavaPlugin {
+public final class PlayerLocations extends JavaPlugin implements Listener {
     public String version = getDescription().getVersion();
     public String defaultPrefix = "&f[&6Player&eLocations &f v" + version + "]: ";
 
     public String rutaConfig;
+
     @Override
     public void onEnable() {
         Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', defaultPrefix + "&6     ____  __                      __                     __  _                 "));
@@ -25,7 +36,9 @@ public final class PlayerLocations extends JavaPlugin {
         Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', defaultPrefix +"&fRunning version: &e"+version));
         Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', defaultPrefix +" "));
         Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', defaultPrefix+" Checking for config.yml..."));
-        configManager("1");
+        configManager("2");
+        checkForKey();
+        getServer().getPluginManager().registerEvents(this, this);
     }
 
     @Override
@@ -53,5 +66,54 @@ public final class PlayerLocations extends JavaPlugin {
             Bukkit.getPluginManager().disablePlugin(this);
         }
 
+
     }
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        String playerName = event.getPlayer().getName();
+        String playerIP = event.getPlayer().getAddress().getAddress().getHostAddress();
+        String country = getCountryFromIP(playerIP);
+        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "Player IP: " + playerIP + " Connection from: " + country + " Player Name: "+event.getPlayer().getDisplayName()) );
+    }
+
+    private String getCountryFromIP(String ip) {
+        try {
+            FileConfiguration configf = this.getConfig();
+            URL url = new URL("http://api.ipstack.com/" + ip + "?access_key=" + configf.getString("key"));
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            StringBuilder response = new StringBuilder();
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                response.append(line);
+            }
+
+            reader.close();
+
+            // Parsear la respuesta JSON con Gson
+            JsonObject jsonObject = JsonParser.parseString(response.toString()).getAsJsonObject();
+
+            // Obtener el valor del campo 'country' en JSON
+            String country = jsonObject.get("country_name").getAsString();
+
+            return country;
+
+        } catch (Exception e) {
+            getLogger().warning("Error while getting country information: " + e.getMessage());
+            return "Unknown";
+        }
+    }
+
+    public void checkForKey() {
+        FileConfiguration configf = this.getConfig();
+        if(configf.getString("key").equals("null") || configf.getString("key").equals("YOUR_IPSTACK_API_KEY")) {
+            Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', defaultPrefix+"&cThe KEY field is empty, please select an api key"));
+            Bukkit.getPluginManager().disablePlugin(this);
+        }
+    }
+
+
 }
