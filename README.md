@@ -60,7 +60,7 @@ PlayerLocations does not currently provide an external API for developers.
 
 ## Contributing
 
-We welcome contributions! If you would like to contribute to the development of PlayerLocations, please follow our [Contribution Guidelines](link_to_contributing_docs).
+Contributions are welcome. You can contribute by providing useful code, suggesting new ideas for updates, or reporting issues/bugs encountered while using the plugin
 
 ## License
 
