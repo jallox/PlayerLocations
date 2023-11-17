@@ -60,7 +60,7 @@ PlayerLocations does not currently provide an external API for developers.
 
 ## Contributing
 
-We welcome contributions! If you would like to contribute to the development of PlayerLocations, please follow our [Contribution Guidelines](link_to_contributing_docs).
+Contributions are welcome. You can contribute by providing useful code, suggesting new ideas for updates, or reporting issues/bugs encountered while using the plugin
 
 ## License
 
@@ -74,5 +74,4 @@ PlayerLocations is licensed under the **Creative Commons Attribution-NonCommerci
 Under the following terms:
 
 - **Attribution** — You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use.
-- **NonCommercial** — You may not use the material for commercial purposes.
 - **NoDerivatives** — If you remix, transform, or build upon the material, you may not distribute the modified material.
