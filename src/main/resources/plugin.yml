@@ -1,5 +1,5 @@
 name: PlayerLocations
-version: '${project.version}'
+version: 1.0.0
 main: dev.jayox.PlayerLocations
 api-version: '1.20'
 description: Get the country of the online players
