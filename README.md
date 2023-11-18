@@ -6,7 +6,7 @@ PlayerLocations is a Minecraft plugin designed to enhance the server experience 
 
 ## Installation
 
-1. Download the latest version of the plugin from [SpigotMC]().
+1. Download the latest version of the plugin from [SpigotMC](https://www.spigotmc.org/resources/playerlocations-get-players-location-using-their-ip-addresses.113594/).
 2. Place the plugin JAR file into the 'plugins' folder of your Bukkit or Spigot server.
 3. Restart the server to load the plugin.
 
