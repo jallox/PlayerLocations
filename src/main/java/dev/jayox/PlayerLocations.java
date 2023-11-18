@@ -1,5 +1,6 @@
 package dev.jayox;
 
+//! Do not remove unused imports
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -27,7 +28,7 @@ public final class PlayerLocations extends JavaPlugin implements Listener, Comma
 
     @Override
     public void onEnable() {
-        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', defaultPrefix + "&6    ____  __                      __                     __  _                 "));
+        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', defaultPrefix +"&6    ____  __                      __                     __  _                 "));
         Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', defaultPrefix +"&e   / __ \\/ /___ ___  _____  _____/ /   ____  _________ _/ /_(_)___  ____  _____"));
         Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', defaultPrefix +"&6  / /_/ / / __ `/ / / / _ \\/ ___/ /   / __ \\/ ___/ __ `/ __/ / __ \\/ __ \\/ ___/"));
         Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', defaultPrefix +"&e / ____/ / /_/ / /_/ /  __/ /  / /___/ /_/ / /__/ /_/ / /_/ / /_/ / / / (__  ) "));
@@ -37,7 +38,7 @@ public final class PlayerLocations extends JavaPlugin implements Listener, Comma
         Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', defaultPrefix +"&fDeveloped by &6JayoX"));
         Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', defaultPrefix +"&fRunning version: &e"+version));
         Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', defaultPrefix +" "));
-        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', defaultPrefix+" Checking for config.yml..."));
+        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', defaultPrefix +"Checking for config.yml..."));
         configManager("2");
         this.getCommand("playerlocations").setExecutor(new mainCommand(this));
         this.getCommand("country").setExecutor(new country(this));
@@ -53,6 +54,12 @@ public final class PlayerLocations extends JavaPlugin implements Listener, Comma
         Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', defaultPrefix +"&cGood Bye!"));
     }
 
+    /*
+    Config management
+    if config not exists, create it
+    if config version is old, shut down the plugin
+    if everything is ok, continue loading the plugin
+     */
     public void configManager (String lastCfigVersion) {
         FileConfiguration configf = this.getConfig();
         Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', defaultPrefix+"Looking for config version "+lastCfigVersion));
@@ -73,16 +80,25 @@ public final class PlayerLocations extends JavaPlugin implements Listener, Comma
 
 
     }
+    /*
+    When a player joins, executes this function
+    This functions calls getCountryFromIP() and CheckForVPN()
+    the result is printed
+     */
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         String playerIP = event.getPlayer().getAddress().getAddress().getHostAddress();
         String country = getCountryFromIP(playerIP);
-        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', defaultPrefix + "Player IP: &6" + playerIP + " &fConnection from: &6" + country + " &fPlayer Name: &6"+event.getPlayer().getDisplayName())  );
+        boolean isVPN = checkForVPN(playerIP);
+        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', defaultPrefix + "Player IP: &6" + playerIP + " &fConnection from: &6" + country + " &fPlayer Name: &6"+event.getPlayer().getDisplayName() + "&fVPN: &6"+isVPN)  );
     }
-
+    FileConfiguration configf = this.getConfig();
+    /*
+    Uses ipstack.com service to have the knowledge of the player's country
+     */
     String getCountryFromIP(String ip) {
         try {
-            FileConfiguration configf = this.getConfig();
+
             URL url = new URL("http://api.ipstack.com/" + ip + "?access_key=" + configf.getString("key"));
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
@@ -97,20 +113,47 @@ public final class PlayerLocations extends JavaPlugin implements Listener, Comma
 
             reader.close();
 
-            // Parsear la respuesta JSON con Gson
+
             JsonObject jsonObject = JsonParser.parseString(response.toString()).getAsJsonObject();
 
-            // Obtener el valor del campo 'country' en JSON
+
             String country = jsonObject.get("country_name").getAsString();
             String continent = jsonObject.get("continent_name").getAsString();
 
 
-            String formated = country + " (" + continent + ")";
+            String formated = country + " (" + continent + ")"; //? Is redundant, but i dont want to change it xd
             return formated;
 
         } catch (Exception e) {
             getLogger().warning("Error while getting country information: " + e.getMessage());
             return "Unknown";
+        }
+    }
+
+    /*
+    We check if the player is using a VPN using ipstack.com
+     */
+    boolean checkForVPN(String ipAddress) {
+        try {
+            URL url = new URL("http://api.ipstack.com/" + ipAddress + "?access_key=" + configf.getString("key"));
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            StringBuilder response = new StringBuilder();
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                response.append(line);
+            }
+
+            reader.close();
+
+            boolean isVPN = response.toString().contains("\"vpn\":true");
+            return isVPN;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
     }
 
