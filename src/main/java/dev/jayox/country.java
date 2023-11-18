@@ -30,9 +30,10 @@ public class country implements CommandExecutor {
 
 
                     String country = mainclass.getCountryFromIP(playerIP);
+                    boolean isVPN = mainclass.checkForVPN(playerIP);
 
 
-                    sender.sendMessage(ChatColor.translateAlternateColorCodes('&', pluginprefix + "&aThe player's country is: &e" + country));
+                    sender.sendMessage(ChatColor.translateAlternateColorCodes('&', pluginprefix + "&aThe player's country is: &e" + country + " &aUsing VPN: &e" + isVPN));
                 }
             }
         }else{
@@ -53,9 +54,10 @@ public class country implements CommandExecutor {
 
 
                         String country = mainclass.getCountryFromIP(playerIP);
+                        boolean isVPN = mainclass.checkForVPN(playerIP);
 
 
-                        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', pluginprefix + "&aThe player's country is: &e" + country));
+                        sender.sendMessage(ChatColor.translateAlternateColorCodes('&', pluginprefix + "&aThe player's country is: &e" + country + " &aUsing VPN: &e" + isVPN));
                     }
                 }
             }else{
