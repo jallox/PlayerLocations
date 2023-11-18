@@ -2,6 +2,8 @@ package dev.jayox;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,7 +19,7 @@ import com.google.gson.JsonParser;
 
 import java.io.File;
 
-public final class PlayerLocations extends JavaPlugin implements Listener {
+public final class PlayerLocations extends JavaPlugin implements Listener, CommandExecutor{
     public String version = getDescription().getVersion();
     public String defaultPrefix = "&f[&6Player&eLocations &f v" + version + "]: ";
 
@@ -25,7 +27,7 @@ public final class PlayerLocations extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
-        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', defaultPrefix + "&6     ____  __                      __                     __  _                 "));
+        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', defaultPrefix + "&6    ____  __                      __                     __  _                 "));
         Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', defaultPrefix +"&e   / __ \\/ /___ ___  _____  _____/ /   ____  _________ _/ /_(_)___  ____  _____"));
         Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', defaultPrefix +"&6  / /_/ / / __ `/ / / / _ \\/ ___/ /   / __ \\/ ___/ __ `/ __/ / __ \\/ __ \\/ ___/"));
         Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', defaultPrefix +"&e / ____/ / /_/ / /_/ /  __/ /  / /___/ /_/ / /__/ /_/ / /_/ / /_/ / / / (__  ) "));
@@ -37,8 +39,11 @@ public final class PlayerLocations extends JavaPlugin implements Listener {
         Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', defaultPrefix +" "));
         Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', defaultPrefix+" Checking for config.yml..."));
         configManager("2");
+        this.getCommand("playerlocations").setExecutor(new mainCommand(this));
+        this.getCommand("country").setExecutor(new country(this));
         checkForKey();
         getServer().getPluginManager().registerEvents(this, this);
+
     }
 
     @Override
@@ -70,13 +75,12 @@ public final class PlayerLocations extends JavaPlugin implements Listener {
     }
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        String playerName = event.getPlayer().getName();
         String playerIP = event.getPlayer().getAddress().getAddress().getHostAddress();
         String country = getCountryFromIP(playerIP);
-        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "Player IP: " + playerIP + " Connection from: " + country + " Player Name: "+event.getPlayer().getDisplayName()) );
+        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', defaultPrefix + "Player IP: &6" + playerIP + " &fConnection from: &6" + country + " &fPlayer Name: &6"+event.getPlayer().getDisplayName())  );
     }
 
-    private String getCountryFromIP(String ip) {
+    String getCountryFromIP(String ip) {
         try {
             FileConfiguration configf = this.getConfig();
             URL url = new URL("http://api.ipstack.com/" + ip + "?access_key=" + configf.getString("key"));
@@ -98,8 +102,11 @@ public final class PlayerLocations extends JavaPlugin implements Listener {
 
             // Obtener el valor del campo 'country' en JSON
             String country = jsonObject.get("country_name").getAsString();
+            String continent = jsonObject.get("continent_name").getAsString();
 
-            return country;
+
+            String formated = country + " (" + continent + ")";
+            return formated;
 
         } catch (Exception e) {
             getLogger().warning("Error while getting country information: " + e.getMessage());
@@ -114,6 +121,8 @@ public final class PlayerLocations extends JavaPlugin implements Listener {
             Bukkit.getPluginManager().disablePlugin(this);
         }
     }
+
+
 
 
 }
