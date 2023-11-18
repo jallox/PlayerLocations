@@ -35,7 +35,7 @@ Replace `YOUR_IPSTACK_API_KEY` with the API key you obtained from ipstack.
 ## Commands
 
 - **/playerlocations** Shows information about plugin and restarts the plugin 
-- **/location <username>** Shows the location of a user
+- **/country <username>** Shows the location of a user
 
 ## Permissions
 
