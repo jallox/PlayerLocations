@@ -20,7 +20,7 @@ import com.google.gson.JsonParser;
 
 import java.io.File;
 
-public final class PlayerLocations extends JavaPlugin implements Listener, CommandExecutor{
+public final class PlayerLocations extends JavaPlugin implements Listener{
     public String version = getDescription().getVersion();
     public String defaultPrefix = "&f[&6Player&eLocations &f v" + version + "]: ";
 
@@ -39,7 +39,7 @@ public final class PlayerLocations extends JavaPlugin implements Listener, Comma
         Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', defaultPrefix +"&fRunning version: &e"+version));
         Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', defaultPrefix +" "));
         Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', defaultPrefix +"Checking for config.yml..."));
-        configManager("2");
+        configManager("3");
         this.getCommand("playerlocations").setExecutor(new mainCommand(this));
         this.getCommand("country").setExecutor(new country(this));
         checkForKey();

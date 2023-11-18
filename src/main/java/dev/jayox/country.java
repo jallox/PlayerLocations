@@ -58,6 +58,8 @@ public class country implements CommandExecutor {
                         sender.sendMessage(ChatColor.translateAlternateColorCodes('&', pluginprefix + "&aThe player's country is: &e" + country));
                     }
                 }
+            }else{
+                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', mainclass.getConfig().getString("NoPermission")));
             }
         }
         return false;

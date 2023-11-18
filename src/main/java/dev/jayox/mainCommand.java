@@ -29,6 +29,8 @@ public class mainCommand implements CommandExecutor {
                     sender.sendMessage(ChatColor.translateAlternateColorCodes('&', pluginprefix+ "&aConfig reloaded succesfully"));
                     sender.sendMessage(ChatColor.translateAlternateColorCodes('&', pluginprefix+ "&aIPSTACK KEY: &e"+mainclass.getConfig().getString("key")));
 
+                }else{
+                    sender.sendMessage(ChatColor.translateAlternateColorCodes('&', mainclass.getConfig().getString("NoPermission")));
                 }
         }
         return true;

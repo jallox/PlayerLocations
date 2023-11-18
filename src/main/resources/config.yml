@@ -1,3 +1,5 @@
-ConfigVersion: "2"
+ConfigVersion: "3"
 
 key: "YOUR_IPSTACK_API_KEY"
+
+NoPermission: "&cYou don't have permission to do that! &6(playerlocations.command.<command_name>"
