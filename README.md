@@ -14,7 +14,7 @@ PlayerLocations is a Minecraft plugin designed to enhance the server experience 
 
 The plugin requires an API key from ipstack to fetch location information. Follow these steps to configure the plugin:
 
-1. Sign up for a free ipstack account at [ipstack signup page](https://ipstack.com/signup).
+1. Sign up for a free ipstack account at [ipstack signup page](https://ipstack.com).
 2. Confirm your email by clicking on the confirmation link sent to you.
 3. Log in to your ipstack account.
 4. Copy your API key from the ipstack dashboard.
@@ -31,20 +31,17 @@ Replace `YOUR_IPSTACK_API_KEY` with the API key you obtained from ipstack.
 ## Features
 
 - Display player join events in the server console, including player name and their country based on IP address.
+-  Command for administrators to have knowledge of their server's traffic by players.
 
 ## Commands
 
 - **/playerlocations** Shows information about plugin and restarts the plugin 
-- **/location <username>** Shows the location of a user
+- **/country [username]** Shows the location of a user
 
 ## Permissions
 
 - **playerlocations.command.playerlocations**
-- **playerlocations.command.location**
-
-## Events
-
-- `PlayerJoinEvent`: Displays player join events in the server console, including player name and their country based on IP address.
+- **playerlocations.command.country**
 
 ## Troubleshooting
 
