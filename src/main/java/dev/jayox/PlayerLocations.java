@@ -85,14 +85,20 @@ public final class PlayerLocations extends JavaPlugin implements Listener{
     This functions calls getCountryFromIP() and CheckForVPN()
     the result is printed
      */
+    FileConfiguration configf = this.getConfig();
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         String playerIP = event.getPlayer().getAddress().getAddress().getHostAddress();
         String country = getCountryFromIP(playerIP);
         boolean isVPN = checkForVPN(playerIP);
-        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', defaultPrefix + "Player IP: &6" + playerIP + " &fConnection from: &6" + country + " &fPlayer Name: &6"+event.getPlayer().getDisplayName() + "&fVPN: &6"+isVPN)  );
+        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', defaultPrefix + "Player IP: &6" + playerIP + " &fConnection from: &6" + country + " &fPlayer Name: &6"+event.getPlayer().getDisplayName() + " &fVPN: &6"+isVPN)  );
+        if(configf.getString("novpn.enabled").equals(true)) {
+            if (isVPN == true) {
+                event.getPlayer().kickPlayer(ChatColor.translateAlternateColorCodes('&', configf.getString("novpn.message")));
+            }
+        }
     }
-    FileConfiguration configf = this.getConfig();
+
     /*
     Uses ipstack.com service to have the knowledge of the player's country
      */
