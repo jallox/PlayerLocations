@@ -22,12 +22,13 @@ import java.io.File;
 
 public final class PlayerLocations extends JavaPlugin implements Listener{
     public String version = getDescription().getVersion();
-    public String defaultPrefix = "&f[&6Player&eLocations &f v" + version + "]: ";
+    public String defaultPrefix = getConfig().getString("prefix").replace("{0}", version);
 
     public String rutaConfig;
 
     @Override
     public void onEnable() {
+        Bukkit.getConsoleSender().sendMessage(" ");
         Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', defaultPrefix +"&6    ____  __                      __                     __  _                 "));
         Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', defaultPrefix +"&e   / __ \\/ /___ ___  _____  _____/ /   ____  _________ _/ /_(_)___  ____  _____"));
         Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', defaultPrefix +"&6  / /_/ / / __ `/ / / / _ \\/ ___/ /   / __ \\/ ___/ __ `/ __/ / __ \\/ __ \\/ ___/"));
@@ -39,11 +40,14 @@ public final class PlayerLocations extends JavaPlugin implements Listener{
         Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', defaultPrefix +"&fRunning version: &e"+version));
         Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', defaultPrefix +" "));
         Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', defaultPrefix +"Checking for config.yml..."));
-        configManager("3");
+        configManager("4");
         this.getCommand("playerlocations").setExecutor(new mainCommand(this));
         this.getCommand("country").setExecutor(new country(this));
         checkForKey();
         getServer().getPluginManager().registerEvents(this, this);
+        Bukkit.getConsoleSender().sendMessage(" ");
+        Bukkit.getConsoleSender().sendMessage("§aStarted succesfully!");
+
 
     }
 
@@ -51,7 +55,8 @@ public final class PlayerLocations extends JavaPlugin implements Listener{
     public void onDisable() {
         Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', defaultPrefix +"&aThanks for using &6Player&eLocations!"));
         Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', defaultPrefix +"&fDeveloped by &6JayoX"));
-        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', defaultPrefix +"&cGood Bye!"));
+        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', defaultPrefix + "&fDisconecting from service..."));
+                Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', defaultPrefix +"&cGood Bye!"));
     }
 
     /*
@@ -95,6 +100,7 @@ public final class PlayerLocations extends JavaPlugin implements Listener{
         if(configf.getString("novpn.enabled").equals(true)) {
             if (isVPN == true) {
                 event.getPlayer().kickPlayer(ChatColor.translateAlternateColorCodes('&', configf.getString("novpn.message")));
+                Bukkit.getConsoleSender().sendMessage(defaultPrefix+"Player using VPN has been kicked!");
             }
         }
     }
@@ -131,7 +137,7 @@ public final class PlayerLocations extends JavaPlugin implements Listener{
             return formated;
 
         } catch (Exception e) {
-            getLogger().warning("Error while getting country information: " + e.getMessage());
+            Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "Error while getting country information: " + e.getMessage()));
             return "Unknown";
         }
     }
@@ -158,7 +164,7 @@ public final class PlayerLocations extends JavaPlugin implements Listener{
             boolean isVPN = response.toString().contains("\"vpn\":true");
             return isVPN;
         } catch (Exception e) {
-            e.printStackTrace();
+            Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "Error while getting country information: " + e.getMessage()));
             return false;
         }
     }

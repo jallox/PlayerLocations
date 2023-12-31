@@ -1,5 +1,5 @@
 name: PlayerLocations
-version: BETA-6.2
+version: 1.1
 main: dev.jayox.PlayerLocations
 api-version: '1.20'
 description: Get the country of the online players

@@ -1,9 +1,11 @@
-ConfigVersion: "3"
+ConfigVersion: "4" # Don't edit this!
 
-key: "YOUR_IPSTACK_API_KEY"
+key: "YOUR_IPSTACK_API_KEY" # Get it from ipstack.com
 
 NoPermission: "&cYou don't have permission to do that! &6(playerlocations.command.<command_name>"
 
-novpn:
+prefix: "&f[&6Player&eLocations &f v{0}]: "
+
+novpn: # Blocks the player when using vpn
   enabled: true
   message: "&cYou can't use VPN on this server"
